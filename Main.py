@@ -1,6 +1,6 @@
 import PyPDF2
 import re
-# import tk
+import tk
 from PyPDF2 import PdfReader
 from PyPDF2 import PageObject, PdfReader
 from FrontEnd import create_ui
