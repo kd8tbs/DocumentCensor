@@ -1,7 +1,6 @@
 import tkinter as tk
 import os
 
-import tkinter as tk
 
 def create_ui():
     # Create the main window
