@@ -53,7 +53,7 @@ class PDFRedactor:
         # Add your PDF redaction processing logic here
         # You can use self.progress.set() to update the progress bar
 
-        self.lbl.config(text="PDF successfully redacted.")
+        self.lbl.config(text="Your Info has")
 
 def start():
     root = tk.Tk()

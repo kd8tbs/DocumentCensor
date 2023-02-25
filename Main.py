@@ -3,6 +3,9 @@ import re
 from tkinter import*
 from PyPDF2 import PdfReader
 from PyPDF2 import PageObject, PdfReader
+import spacy
+nlp = spacy.load("en_core_web_sm")
+
 
 def extract_text_from_pdf(path):
     """
@@ -43,22 +46,20 @@ def save_text_as_pdf(text, template_path, file_name):
 
 def redact_string(input_string, regex_pattern):
     redacted_string = re.sub(regex_pattern, "[REDACTED]", input_string)
+    #print(redacted_string)
     return redacted_string
 
 def shield(input_path, output_path):
     text = extract_text_from_pdf(input_path)
-    regex_arr = [
-        r"\d\d\d-\d\d-\d\d\d\d",  # Social Security 123-12-1234
-        r"\d\d/\d\d/\d\d\d\d",  # Birthdays 11/30/1980
-        r"^[A-Za-z]{2}\d{2}-\d{5}-\d{4}$",  # Driver License Numbers D123456789123
-        r"\d\d\d\d\d\d\d\d\d",  # Routing Number 123456789
-        r"\(\d\d\d\)\d\d\d-\d\d\d\d"  # Phone Numbers (231)667-503
-    ]
+    # apply the language model to extract named entities
+    doc = nlp(text)
 
-    for regex in regex_arr:
-        text = redact_string(text, regex)
+    # iterate over the entities and print them
+    for entity in doc.ents:
+        print(entity.text, entity.label_)
 
-    save_text_as_pdf(text, input_path, output_path)
+        
+    save_text_as_pdf("text", input_path, output_path)
     
 
 
