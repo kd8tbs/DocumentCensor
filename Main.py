@@ -84,12 +84,11 @@ if __name__ == '__main__':
     text = extract_text_from_pdf('examples/SensitiveInfo.pdf')
     # create_pdf_with_text(extract_text_from_pdf('examples/test.pdf'), 'examples/test.pdf', 'examples/test2.pdf') # TODO: Fix this
     regex_arr = [
-    r"^\d{3}-\d{2}-\d{4}$",  # Social Security
-    r"^\d{4}-\d{2}-\d{2}$",  # Birthdays
-    r"^\d+\s+\w+\s+\w+(\s+\w+)?,\s+\w+\s+\d{5}(-\d{4})?$",  # Addresses
-    r"^\(\d{3}\)\d{3}-\d{4}$",  # Phone Numbers
-    r"^[A-Za-z]{2}\d{2}-\d{5}-\d{4}$",  # Driver License Numbers
-    r"^\d{9}$"  # Routing Number
+    r"\d\d\d-\d\d-\d\d\d\d",  # Social Security 123-12-1234
+    r"\d\d/\d\d/\d\d\d\d",  # Birthdays 11/30/1980
+    r"^[A-Za-z]{2}\d{2}-\d{5}-\d{4}$",  # Driver License Numbers D123456789123
+    r"\d\d\d\d\d\d\d\d\d",  # Routing Number 123456789
+    r"\(\d\d\d\)\d\d\d-\d\d\d\d" #Phone Numbers (231)667-503
     ]
     tokenized_text = tokenize(text)
     
