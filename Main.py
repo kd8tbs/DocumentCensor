@@ -7,7 +7,7 @@ from PyPDF2 import PageObject, PdfReader
 from docx import Document
 
 def extract_text_from_doc(path):
-    document = docx.Document(path)
+    document = Document(path)
     text = '\n'.join([paragraph.text for paragraph in document.paragraphs])
     return text
 
