@@ -45,39 +45,13 @@ def create_pdf_with_text(text, input_path, output_path):
     with open(output_path, 'wb') as f:
         f.write(output_buffer.getvalue())
 
-    
-
-def tokenize(text):
-    """Tokenizes a string based on words.
-
-    Args:
-        text (str): The input string to tokenize.
-
-    Returns:
-        list: A list of words in the input string.
-    """
-    tokens = text.split()
-    return tokens
 
 
-def redact_strings(arr, regex_filter):
-    """ 
-    Redacts strings in an array that match a regex filter.
 
-    Parameters:
-    arr (list): An array of strings
-    regex_filter (str): A regex pattern to filter the strings
 
-    Returns:
-    list: A modified array where strings matching the regex filter are replaced with "[REDACTED]"
-    """
-    redacted_arr = []
-    for string in arr:
-        if re.search(regex_filter, string):
-            redacted_arr.append("[REDACTED]")
-        else:
-            redacted_arr.append(string)
-    return redacted_arr
+def redact_string(input_string, regex_pattern):
+    redacted_string = re.sub(regex_pattern, "[REDACTED]", input_string)
+    return redacted_string
 
 if __name__ == '__main__':
     # main stuff goes here
@@ -90,19 +64,10 @@ if __name__ == '__main__':
     r"\d\d\d\d\d\d\d\d\d",  # Routing Number 123456789
     r"\(\d\d\d\)\d\d\d-\d\d\d\d" #Phone Numbers (231)667-503
     ]
-    tokenized_text = tokenize(text)
+    
     
     for regex in regex_arr:
-        print(regex)
-        tokenized_text = redact_strings(tokenized_text, regex)
-    
-    print(tokenized_text)
-    arr = ["password123", "user123", "admin", "admin123", "(989)842-7702"]
-    regex_filter = r"^\(\d{3}\)\d{3}-\d{4}$"
-
-    redacted_arr = redact_strings(arr, regex_filter)
-
-    print(redacted_arr) # prints ["[REDACTED]", "user123", "[REDACTED]", "[REDACTED]"]
-
+        text = redact_string(text, regex)
+    print(text)
 
     
