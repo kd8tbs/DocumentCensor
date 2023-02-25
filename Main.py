@@ -60,7 +60,7 @@ if __name__ == '__main__':
     regex_arr = [
     r"\d\d\d-\d\d-\d\d\d\d",  # Social Security 123-12-1234
     r"\d\d/\d\d/\d\d\d\d",  # Birthdays 11/30/1980
-    r"^[A-Za-z]{2}\d{2}-\d{5}-\d{4}$",  # Driver License Numbers D123456789123
+    r"[A-Za-z]\d\d\d\d\d\d\d\d\d\d\d\d",  # Driver License Numbers D123456789123
     r"\d\d\d\d\d\d\d\d\d",  # Routing Number 123456789
     r"\(\d\d\d\)\d\d\d-\d\d\d\d" #Phone Numbers (231)667-503
     ]
