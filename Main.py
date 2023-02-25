@@ -1,31 +1,16 @@
 import PyPDF2
+from PyPDF2 import PdfReader
 
 def extract_text_from_pdf(path):
     """
     Extracts all text from a PDF file and returns it as a string.
     """
-    # Open the PDF file in read-binary mode.
-    with open(path, 'rb') as file:
-        # Create a PDF reader object.
-        pdf_reader = PyPDF2.PdfFileReader(file)
+    reader = PdfReader(path)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text() + "\n"
+    return text
 
-        # Get the number of pages in the PDF file.
-        num_pages = pdf_reader.getNumPages()
-
-        # Iterate through all the pages and extract the text.
-        text = ''
-        for page in range(num_pages):
-            # Get the current page object.
-            pdf_page = pdf_reader.getPage(page)
-
-            # Extract the text from the page.
-            page_text = pdf_page.extractText()
-
-            # Add the page text to the overall text.
-            text += page_text
-
-        # Return the text as a string.
-        return text
 
 def insert_text_into_pdf(path, text):
     """
@@ -76,3 +61,4 @@ def tokenize(text):
 
 if __name__ == '__main__':
     # main stuff goes here
+    print(extract_text_from_pdf('examples/test.pdf'))
