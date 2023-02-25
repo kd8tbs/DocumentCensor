@@ -1,9 +1,9 @@
 import PyPDF2
 import re
-import tk
+from tkinter import*
 from PyPDF2 import PdfReader
 from PyPDF2 import PageObject, PdfReader
-from FrontEnd import create_ui
+from FrontEnd import start
 
 def extract_text_from_pdf(path):
     """
@@ -65,4 +65,5 @@ def main(input_path, output_path):
 
 
 if __name__ == '__main__':
+   start()
    main("examples/SensitiveInfo.pdf", "examples/output.pdf")
