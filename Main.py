@@ -34,7 +34,7 @@ def shield(input_path, output_path):
     for regex in regex_arr:
         text = redact_string(text, regex)
 
-    create_pdf(text, "output.pdf")
+    save_text_as_doc(text, "output.pdf")
     
 
 
