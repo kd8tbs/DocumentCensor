@@ -1,5 +1,5 @@
 import PyPDF2
-from PyPDF2 import PageObject, PdfReader
+from PyPDF2 import PdfReader
 import os
 from io import BytesIO
 from PyPDF2 import PdfReader, PdfWriter
@@ -15,33 +15,35 @@ def extract_text_from_pdf(path):
         text += page.extract_text() + "\n"
     return text
 
-import PyPDF2
+def create_pdf_with_text(text, input_path, output_path):
+    # Open the original PDF file
+    with open(input_path, 'rb') as f:
+        pdf = PdfReader(f)
 
-def save_text_as_pdf(text, template_path, file_name):
-    # open the existing PDF template
-    with open(template_path, 'rb') as template_file:
-        # create a PyPDF2 PdfFileReader object from the template
-        template_pdf = PyPDF2.PdfReader(template_file)
-        
-        # create a new PDF document
-        output_pdf = PyPDF2.PdfWriter()
-        
-        # loop through each page of the template and add it to the output PDF
-        for i in range(len(template_pdf.pages)):
-            page = template_pdf.pages[i]
-            output_pdf.add_page(page)
-        
-        # create a new page and add the text to it
-        new_page = PageObject.create_blank_page(None, output_pdf.pages[0].mediabox.width, output_pdf.pages[0].mediabox.height)
-        new_page.merge_page(output_pdf.pages[0])
-        # content_stream = PyPDF2.pdf.ContentStream([PyPDF2.pdf.TextObject.createTextObject(output_pdf, text)], new_page)
-        # new_page._contentStreams = [content_stream]
-        output_pdf.add_page(new_page)
-        
-        # save the output PDF to a file
-        with open(file_name, 'wb') as output_file:
-            output_pdf.write(output_file)
+        # Create a new PDF writer
+        writer = PdfWriter()
 
+        # Add the document information to the new PDF writer
+        writer.add_metadata(pdf.metadata)
+
+        # Add each page from the original PDF to the new PDF writer
+        for page_num in range(len(pdf.pages)):
+            # page = pdf.getPage(page_num)
+            page = pdf.pages[page_num]
+            writer.add_page(page)
+
+        # Add a new page with the extracted text
+        new_page = writer.add_blank_page(width=200, height=200) # Change the width and height to suit your needs
+        new_page.merge_page(PdfReader(BytesIO(text.encode())).getPage(0))
+        new_page.mergeTranslatedPage(new_page, dx=0, dy=100, expand=False) # Change the dx and dy values to adjust the position of the added text
+
+        # Write the new PDF to a BytesIO buffer
+        output_buffer = BytesIO()
+        writer.write(output_buffer)
+
+    # Write the BytesIO buffer to the output file
+    with open(output_path, 'wb') as f:
+        f.write(output_buffer.getvalue())
 
     
 
@@ -57,17 +59,6 @@ def tokenize(text):
     tokens = text.split()
     return tokens
 
-def detokenize(tokens):
-    """Detokenizes a list of words into a string.
-
-    Args:
-        tokens (list): A list of words to detokenize.
-
-    Returns:
-        str: A string of words.
-    """
-    return ' '.join(tokens)
-
 
 def redact_strings(arr, regex_filter):
     """ 
@@ -80,18 +71,39 @@ def redact_strings(arr, regex_filter):
     Returns:
     list: A modified array where strings matching the regex filter are replaced with "[REDACTED]"
     """
-    print(regex_filter)
     redacted_arr = []
     for string in arr:
         if re.search(regex_filter, string):
             redacted_arr.append("[REDACTED]")
-            print('Redacted: ' + string)
         else:
             redacted_arr.append(string)
-            print('Not Redacted: ' + string)
     return redacted_arr
 
 if __name__ == '__main__':
     # main stuff goes here
-    text = extract_text_from_pdf('examples/test.pdf')
-    save_text_as_pdf(text, 'examples/test.pdf', 'examples/output.pdf')
+    text = extract_text_from_pdf('examples/SensitiveInfo.pdf')
+    # create_pdf_with_text(extract_text_from_pdf('examples/test.pdf'), 'examples/test.pdf', 'examples/test2.pdf') # TODO: Fix this
+    regex_arr = [
+    r"^\d{3}-\d{2}-\d{4}$",  # Social Security
+    r"^\d{4}-\d{2}-\d{2}$",  # Birthdays
+    r"^\d+\s+\w+\s+\w+(\s+\w+)?,\s+\w+\s+\d{5}(-\d{4})?$",  # Addresses
+    r"^\(\d{3}\)\d{3}-\d{4}$",  # Phone Numbers
+    r"^[A-Za-z]{2}\d{2}-\d{5}-\d{4}$",  # Driver License Numbers
+    r"^\d{9}$"  # Routing Number
+    ]
+    tokenized_text = tokenize(text)
+    
+    for regex in regex_arr:
+        print(regex)
+        tokenized_text = redact_strings(tokenized_text, regex)
+    
+    print(tokenized_text)
+    arr = ["password123", "user123", "admin", "admin123", "(989)842-7702"]
+    regex_filter = r"^\(\d{3}\)\d{3}-\d{4}$"
+
+    redacted_arr = redact_strings(arr, regex_filter)
+
+    print(redacted_arr) # prints ["[REDACTED]", "user123", "[REDACTED]", "[REDACTED]"]
+
+
+    
