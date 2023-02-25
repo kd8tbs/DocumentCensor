@@ -3,7 +3,7 @@ import tkinter as tk
 class TextBoxInput:
     def __init__(self, master):
         self.master = master
-        self.master.title("TextBox Input")
+        self.master.title("DocuShield")
         self.master.geometry('400x200')
 
         # TextBox Creation
@@ -11,7 +11,7 @@ class TextBoxInput:
         self.inputtxt.pack()
 
         # Button Creation
-        tk.Button(self.master, text="Print", command=self.printInput).pack()
+        tk.Button(self.master, text="Shield", command=self.printInput).pack()
 
         # Label Creation
         self.lbl = tk.Label(self.master, text="")
@@ -27,7 +27,7 @@ class TextBoxInput:
         # Add your processing logic here
         self.lbl.config(text="Provided Input: " + inp)
 
-    
+
 def start():
     root = tk.Tk()
     TextBoxInput(root)
