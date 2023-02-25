@@ -22,27 +22,15 @@ def redact_string(input_string, regex_pattern):
     return redacted_string
 
 def shield(input_path, output_path):
-      # Load the English language model
-
-    # Process the text with spaCy
-    text = extract_text_from_doc(input_path)
-    doc = nlp(text)
-
-    # Define a list of sensitive entity types to look for
-    sensitive_entities = ["NAME", "DATE", "TIME", "MONEY", "CREDIT_CARD", "SSN"]
-
-    # Create a list to store the sensitive entities
-    sensitive_info = []
-
-    # Iterate over the entities in the document
-    for ent in doc.ents:
-        # Check if the entity type is sensitive
-        
-        if ent.label_ in sensitive_entities:
-            # Add the sensitive entity text and label to the list
-            sensitive_info.append((ent.text, ent.label_))
-            print(sensitive_info)
-    # Return the list of sensitive entities
-    save_text_as_doc(text, output_path)
+    nlp = spacy.load("en_core_web_sm")
+    input_string = extract_text_from_doc(input_path)
+    doc = nlp(input_string)
+    vileInfo = []
+    # iterate over the entities and print them
+    for entity in doc.ents:
+       vileInfo.append(entity.text)
+    for i in vileInfo:
+        input_string = input_string.replace(i, "[REDACTED]")
+    save_text_as_doc(input_string, output_path)
 
 

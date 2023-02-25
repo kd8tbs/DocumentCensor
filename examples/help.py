@@ -1,30 +1,14 @@
 import spacy
 
-# Load the Spacy model
-nlp = spacy.load('en_core_web_sm')
+# load the language model
+nlp = spacy.load("en_core_web_sm")
 
-# The text string containing sensitive and identifiable information
-text = "John Smith's Social Security Number is 123-45-6789. He was born on January 1st, 1980 and has a bank account with a balance of $10,000. His mother's maiden name is Johnson."
+# define the string to analyze
+input_string = "Hello world, my name is Poony or Daniel. My phone number for local single women is (989)842-7702. If needed my routing number for sending money 123456789. My current Address South 9 Mile road in Midland Michigan. My birthday is 11/20/1999. My driver license D550372760888. My social security is 123-12-1234 Create backstory on why this would be beneficial for businesses or regular citizens. Don’t sell the product, create a way to show how it will be helpful for the future and how data will be protected."
 
-# Process the text string using Spacy
-doc = nlp(text)
+# apply the language model to extract named entities
+doc = nlp(input_string)
 
-# Define a set of sensitive and identifiable entities
-sensitive_entities = {'PERSON', 'ORG', 'GPE', 'DATE', 'MONEY'}
-
-# Extract sensitive and identifiable information from the text string
-sensitive_info = set()
-for ent in doc.ents:
-    if ent.label_ in sensitive_entities:
-        sensitive_info.add((ent.text, ent.label_))
-        
-for token in doc:
-    if token.ent_type_ in sensitive_entities:
-        sensitive_info.add((token.text, token.ent_type_))
-    elif token.pos_ == 'PROPN':
-        sensitive_info.add((token.text, 'PROPN'))
-    elif token.pos_ == 'NOUN' and token.dep_ == 'compound':
-        sensitive_info.add((token.text, 'COMPOUND_NOUN'))
-
-# Print the sensitive and identifiable information
-print(sensitive_info)
+# iterate over the entities and print them
+for entity in doc.ents:
+    print(entity.text, entity.label_)
