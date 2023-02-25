@@ -2,13 +2,25 @@ import tkinter as tk
 from tkinter import filedialog
 import tkinter.ttk as ttk
 from Main import shield
+from PIL import ImageTk, Image
 import os
 
 class docxRedactor:
     def __init__(self, master):
         self.master = master
         self.master.title("DocuShield")
-        self.master.geometry('400x250')
+        self.master.geometry('400x380')
+
+        # Load the image using PIL
+        self.img = Image.open('docushield-logo.png')
+        self.img = self.img.resize((400, 250), Image.ANTIALIAS)
+        
+        # Create a PhotoImage object from the image
+        self.img = ImageTk.PhotoImage(self.img)
+
+        # Create a Label widget with the image as the background
+        self.bg_label = tk.Label(self.master, image=self.img)
+        self.bg_label.place(x=0, y=70, relwidth=1, relheight=1)
 
         # Instructions Label
         tk.Label(self.master, text="Enter the file path of the docx to redact:").pack()
@@ -23,11 +35,6 @@ class docxRedactor:
         # Label Creation
         self.lbl = tk.Label(self.master, text="")
         self.lbl.pack()
-
-        # Progress Bar
-        self.progress = tk.DoubleVar()
-        self.progressbar = tk.ttk.Progressbar(self.master, orient="horizontal", length=200, mode="determinate", variable=self.progress)
-        self.progressbar.pack()
         
         # Shield Button
         tk.Button(self.master, text="Shield", command=self.process_docx).pack()
