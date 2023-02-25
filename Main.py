@@ -1,17 +1,14 @@
+import PyPDF2
+from fpdf import FPDF
 import re
 from tkinter import*
 from PyPDF2 import PdfReader
 from PyPDF2 import PageObject, PdfReader
 from docx import Document
 
-def extract_text_from_pdf(path):
-    """
-    Extracts all text from a PDF file and returns it as a string.
-    """
-    reader = PdfReader(path)
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text() + "\n"
+def extract_text_from_doc(path):
+    document = docx.Document(path)
+    text = '\n'.join([paragraph.text for paragraph in document.paragraphs])
     return text
 
 
@@ -25,7 +22,7 @@ def redact_string(input_string, regex_pattern):
     return redacted_string
 
 def shield(input_path, output_path):
-    text = extract_text_from_pdf(input_path)
+    text = extract_text_from_doc(input_path)
     regex_arr = [
         r"\d\d\d-\d\d-\d\d\d\d",  # Social Security 123-12-1234
         r"\d\d/\d\d/\d\d\d\d",  # Birthdays 11/30/1980
@@ -37,7 +34,7 @@ def shield(input_path, output_path):
     for regex in regex_arr:
         text = redact_string(text, regex)
 
-    save_text_as_doc(text, "output.docx")
+    create_pdf(text, "output.pdf")
     
 
 
