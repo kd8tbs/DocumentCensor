@@ -47,9 +47,11 @@ class docxRedactor:
         if not filepath.endswith('.docx'):
             self.lbl.config(text="Error: File is not a docx.")
             return
+	    
+        output_path = filepath.replace(".docx", "-Shielded.docx")
+        print(output_path)
 
-
-        shield(filepath, "thing.docx")
+        shield(filepath, output_path)
         # Add your docx redaction processing logic here
         # You can use self.progress.set() to update the progress bar
 
