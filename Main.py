@@ -62,3 +62,4 @@ def tokenize(text):
 if __name__ == '__main__':
     # main stuff goes here
     print(extract_text_from_pdf('examples/test.pdf'))
+    # insert_text_into_pdf('examples/test2.pdf', 'Hello World')
