@@ -3,7 +3,6 @@ import re
 from tkinter import*
 from PyPDF2 import PdfReader
 from PyPDF2 import PageObject, PdfReader
-from FrontEnd import start
 
 def extract_text_from_pdf(path):
     """
@@ -46,7 +45,7 @@ def redact_string(input_string, regex_pattern):
     redacted_string = re.sub(regex_pattern, "[REDACTED]", input_string)
     return redacted_string
 
-def main(input_path, output_path):
+def shield(input_path, output_path):
     text = extract_text_from_pdf(input_path)
     regex_arr = [
         r"\d\d\d-\d\d-\d\d\d\d",  # Social Security 123-12-1234
@@ -64,6 +63,3 @@ def main(input_path, output_path):
 
 
 
-if __name__ == '__main__':
-   start()
-   main("examples/SensitiveInfo.pdf", "examples/output.pdf")

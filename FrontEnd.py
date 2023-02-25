@@ -1,34 +1,64 @@
 import tkinter as tk
+from tkinter import filedialog
+import tkinter.ttk as ttk
+from Main import shield
+import os
 
-class TextBoxInput:
+class PDFRedactor:
     def __init__(self, master):
         self.master = master
         self.master.title("DocuShield")
-        self.master.geometry('400x200')
+        self.master.geometry('400x250')
+
+        # Instructions Label
+        tk.Label(self.master, text="Enter the file path of the PDF to redact:").pack()
 
         # TextBox Creation
-        self.inputtxt = tk.Text(self.master, height=5, width=20)
+        self.inputtxt = tk.Text(self.master, height=1, width=50)
         self.inputtxt.pack()
 
         # Button Creation
-        tk.Button(self.master, text="Shield", command=self.printInput).pack()
+        tk.Button(self.master, text="Select PDF", command=self.select_file).pack()
 
         # Label Creation
         self.lbl = tk.Label(self.master, text="")
         self.lbl.pack()
 
-     # Function for getting Input from textbox and printing it
-    def printInput(self):
-        inp = self.inputtxt.get(1.0, "end-1c")
-        self.shieldUp(inp)
+        # Progress Bar
+        self.progress = tk.DoubleVar()
+        self.progressbar = tk.ttk.Progressbar(self.master, orient="horizontal", length=200, mode="determinate", variable=self.progress)
+        self.progressbar.pack()
+        
+        # Shield Button
+        tk.Button(self.master, text="Shield", command=self.process_pdf).pack()
 
-    # Function for processing input and updating label text
-    def shieldUp(self, inp):
-        # Add your processing logic here
-        self.lbl.config(text="Provided Input: " + inp)
+    def select_file(self):
+        filepath = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select PDF file", filetypes=(("PDF files", "*.pdf"), ("All files", "*.*")))
+        self.inputtxt.delete('1.0', tk.END)
+        self.inputtxt.insert(tk.END, filepath)
 
+    def process_pdf(self):
+        filepath = self.inputtxt.get('1.0', tk.END).strip()
+
+        if not os.path.exists(filepath):
+            self.lbl.config(text="Error: File does not exist.")
+            return
+
+        if not filepath.endswith('.pdf'):
+            self.lbl.config(text="Error: File is not a PDF.")
+            return
+
+
+        shield(filepath, "examples/help.pdf")
+        # Add your PDF redaction processing logic here
+        # You can use self.progress.set() to update the progress bar
+
+        self.lbl.config(text="PDF successfully redacted.")
 
 def start():
     root = tk.Tk()
-    TextBoxInput(root)
+    PDFRedactor(root)
     root.mainloop()
+    
+if __name__ == '__main__':
+   start()
