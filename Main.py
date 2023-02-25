@@ -1,9 +1,6 @@
-import PyPDF2
-from fpdf import FPDF
+
 import re
 from tkinter import*
-from PyPDF2 import PdfReader
-from PyPDF2 import PageObject, PdfReader
 from docx import Document
 
 def extract_text_from_doc(path):
