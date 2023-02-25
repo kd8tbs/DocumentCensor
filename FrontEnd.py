@@ -4,21 +4,21 @@ import tkinter.ttk as ttk
 from Main import shield
 import os
 
-class PDFRedactor:
+class docxRedactor:
     def __init__(self, master):
         self.master = master
         self.master.title("DocuShield")
         self.master.geometry('400x250')
 
         # Instructions Label
-        tk.Label(self.master, text="Enter the file path of the PDF to redact:").pack()
+        tk.Label(self.master, text="Enter the file path of the docx to redact:").pack()
 
         # TextBox Creation
         self.inputtxt = tk.Text(self.master, height=1, width=50)
         self.inputtxt.pack()
 
         # Button Creation
-        tk.Button(self.master, text="Select PDF", command=self.select_file).pack()
+        tk.Button(self.master, text="Select docx", command=self.select_file).pack()
 
         # Label Creation
         self.lbl = tk.Label(self.master, text="")
@@ -30,34 +30,34 @@ class PDFRedactor:
         self.progressbar.pack()
         
         # Shield Button
-        tk.Button(self.master, text="Shield", command=self.process_pdf).pack()
+        tk.Button(self.master, text="Shield", command=self.process_docx).pack()
 
     def select_file(self):
-        filepath = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select PDF file", filetypes=(("PDF files", "*.pdf"), ("All files", "*.*")))
+        filepath = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select docx file", filetypes=(("docx files", "*.docx"), ("All files", "*.*")))
         self.inputtxt.delete('1.0', tk.END)
         self.inputtxt.insert(tk.END, filepath)
 
-    def process_pdf(self):
+    def process_docx(self):
         filepath = self.inputtxt.get('1.0', tk.END).strip()
 
         if not os.path.exists(filepath):
             self.lbl.config(text="Error: File does not exist.")
             return
 
-        if not filepath.endswith('.pdf'):
-            self.lbl.config(text="Error: File is not a PDF.")
+        if not filepath.endswith('.docx'):
+            self.lbl.config(text="Error: File is not a docx.")
             return
 
 
-        shield(filepath, "thing.pdf")
-        # Add your PDF redaction processing logic here
+        shield(filepath, "thing.docx")
+        # Add your docx redaction processing logic here
         # You can use self.progress.set() to update the progress bar
 
-        self.lbl.config(text="PDF successfully redacted.")
+        self.lbl.config(text="docx successfully redacted.")
 
 def start():
     root = tk.Tk()
-    PDFRedactor(root)
+    docxRedactor(root)
     root.mainloop()
     
 if __name__ == '__main__':

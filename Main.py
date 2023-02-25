@@ -1,7 +1,10 @@
 
 import re
+import spacy
 from tkinter import*
 from docx import Document
+
+nlp = spacy.load("en_core_web_sm")
 
 def extract_text_from_doc(path):
     document = Document(path)
@@ -19,20 +22,27 @@ def redact_string(input_string, regex_pattern):
     return redacted_string
 
 def shield(input_path, output_path):
+      # Load the English language model
+
+    # Process the text with spaCy
     text = extract_text_from_doc(input_path)
-    regex_arr = [
-        r"\d\d\d-\d\d-\d\d\d\d",  # Social Security 123-12-1234
-        r"\d\d/\d\d/\d\d\d\d",  # Birthdays 11/30/1980
-        r"^[A-Za-z]{2}\d{2}-\d{5}-\d{4}$",  # Driver License Numbers D123456789123
-        r"\d\d\d\d\d\d\d\d\d",  # Routing Number 123456789
-        r"\(\d\d\d\)\d\d\d-\d\d\d\d"  # Phone Numbers (231)667-503
-    ]
+    doc = nlp(text)
 
-    for regex in regex_arr:
-        text = redact_string(text, regex)
+    # Define a list of sensitive entity types to look for
+    sensitive_entities = ["NAME", "DATE", "TIME", "MONEY", "CREDIT_CARD", "SSN"]
 
-    save_text_as_doc(text, "output.pdf")
-    
+    # Create a list to store the sensitive entities
+    sensitive_info = []
 
+    # Iterate over the entities in the document
+    for ent in doc.ents:
+        # Check if the entity type is sensitive
+        
+        if ent.label_ in sensitive_entities:
+            # Add the sensitive entity text and label to the list
+            sensitive_info.append((ent.text, ent.label_))
+            print(sensitive_info)
+    # Return the list of sensitive entities
+    save_text_as_doc(text, output_path)
 
 
