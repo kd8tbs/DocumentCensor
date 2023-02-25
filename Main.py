@@ -1,5 +1,6 @@
 import PyPDF2
 from PyPDF2 import PdfReader
+from FrontEnd import create_ui
 
 def extract_text_from_pdf(path):
     """
@@ -63,4 +64,5 @@ if __name__ == '__main__':
     # main stuff goes here
     text = extract_text_from_pdf('examples/test.pdf')
     print(tokenize(text))
+    create_ui()
     # insert_text_into_pdf('examples/test2.pdf', 'Hello World')
