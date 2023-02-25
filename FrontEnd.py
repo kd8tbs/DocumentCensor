@@ -49,7 +49,7 @@ class PDFRedactor:
             return
 
 
-        shield(filepath, "examples/help.pdf")
+        shield(filepath, "thing.pdf")
         # Add your PDF redaction processing logic here
         # You can use self.progress.set() to update the progress bar
 
