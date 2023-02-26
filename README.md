@@ -10,7 +10,7 @@ This program was originally developed at the Central Michigan University, Reimag
 
 ## System Requirements
 - Text Files that can be used with DocuShield:
-  - .doxc (Micosoft Office Word)
+  - .docx (Micosoft Office Word)
 - Versions of Python DocuShield has been tested with:
   - 3.10.10
 - Python Libraries/Modules Installed:
